@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+
+    <style>
+        body, html{
+            height: 100%;
+            background: #000;
+        }
+
+        body{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .lampada{
+            width: 650px;
+            height: 1066px;
+            margin: 0;
+            padding: 0;
+            border: none;
+            outline: none;
+            background: url('images/lampada.jpeg') -130px 0;
+        }
+
+        .lampada.on{
+            background-position: 810px 0;
+        }
+    </style>
+</head>
+<body>
+    <button id="lampada" type="button" class="lampada" data-state="off"></button>
+
+    <script src="https://www.gstatic.com/firebasejs/4.10.1/firebase.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.10.1/firebase-database.js"></script>
+    <script>
+        // Initialize Firebase
+        // TODO: Replace with your project's customized code snippet
+        var config = {
+            apiKey: "AIzaSyCMUTbGkvJgCwlSBY4HF8sMJAtO82M9Wo4",
+            authDomain: "iot-tutorial-68db6.firebaseapp.com",
+            databaseURL: "https://iot-tutorial-68db6.firebaseio.com",
+            storageBucket: "iot-tutorial-68db6.appspot.com"
+        };
+
+        firebase.initializeApp(config);
+
+        let lampada = document.querySelector('#lampada');
+
+        lampada.addEventListener('click', () => {
+            let state = lampada.getAttribute('data-state');
+
+            if(state == 'off'){
+                firebase.database().ref('lampada').set('on');
+            } else{
+                firebase.database().ref('lampada').set('off');
+            }
+        });
+
+        firebase.database().ref('lampada').on('value', snapshot => {
+            let l = snapshot.val();
+
+            if(l == 'on'){
+                lampada.classList.add('on');
+                lampada.setAttribute('data-state', 'on');
+            } else{
+                lampada.classList.remove('on');
+                lampada.setAttribute('data-state', 'off');
+            }
+        });
+    </script>
+</body>
+</html>
